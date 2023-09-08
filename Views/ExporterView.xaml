@@ -1,0 +1,111 @@
+﻿<UserControl x:Class="AHPTest.Views.ExporterView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:AHPTest.Views" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="clr-namespace:AHPTest.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodels:ExporterViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800" d:Tag="专家调查" mc:Ignorable="d"
+             >
+    <UserControl.Resources />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <GroupBox Header="标度设置">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal">
+                        <ItemsControl VerticalAlignment="Center" ItemsSource="{Binding Methods}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <RadioButton Checked="RadioButton_Checked" Content="{Binding Name}" GroupName="rb" IsChecked="{Binding IsChecked}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                        <CheckBox Margin="20,0" VerticalAlignment="Center" Checked="CheckBox_Checked" Content="展示偶数"
+                                  IsChecked="{Binding IsEvenShowed}"
+                                  Unchecked="CheckBox_Checked"
+                                  />
+                        <CheckBox Margin="0" VerticalAlignment="Center" Checked="CheckBox_Checked" Content="展示小数"
+                                  IsChecked="{Binding IsLeftShowed}"
+                                  Unchecked="CheckBox_Checked"
+                                  />
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Margin="10,0">
+                        <TextBlock Text="描述" />
+                        <TextBlock Text="值" />
+                    </StackPanel>
+                    <ItemsControl Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Properties}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBox Text="{Binding Name}" />
+                                    <TextBox Text="{Binding Value}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Command="{Binding RefreshCmd}" Content="刷新" Style="{StaticResource SquareButtonStyle}" />
+                    <Button Command="{Binding SaveCmd}" Content="保存" Style="{StaticResource SquareButtonStyle}" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1">
+            <GroupBox.Resources>
+                <CollectionViewSource x:Key="weightTasks" Source="{Binding Models}">
+                    <CollectionViewSource.GroupDescriptions>
+                        <PropertyGroupDescription PropertyName="Top.Content" />
+                    </CollectionViewSource.GroupDescriptions>
+                </CollectionViewSource>
+            </GroupBox.Resources>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Button Command="{Binding CalcCmd}" Content="打分" Style="{StaticResource SquareButtonStyle}" />
+                <DataGrid Grid.Column="1" Margin="5" ItemsSource="{Binding Source={StaticResource weightTasks}}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="*" Binding="{Binding Left.Content}" Header="指标项" IsReadOnly="True" />
+                        <DataGridTextColumn Width="*" Binding="{Binding Right.Content}" Header="相对指标项" IsReadOnly="True" />
+                        <DataGridTextColumn MinWidth="40" Binding="{Binding Value, StringFormat={}{0:F4}, TargetNullValue=''}" Header="分值" />
+                    </DataGrid.Columns>
+                    <DataGrid.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.ContainerStyle>
+                                <Style TargetType="GroupItem" />
+                            </GroupStyle.ContainerStyle>
+                        </GroupStyle>
+                    </DataGrid.GroupStyle>
+                </DataGrid>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>
