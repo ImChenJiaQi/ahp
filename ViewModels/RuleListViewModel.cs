@@ -52,12 +52,19 @@ namespace AHPTest.ViewModels
             OpenFileDialog dialog = new OpenFileDialog()
             {
                 Title = "导入配置文件",
-                Filter = "(ahpJson文件)|*.ahp.json",
+                Filter = "(ahp.json文件)|*.ahp.json",
 
             };
             if (dialog.ShowDialog() == true)
             {
-                File.Copy(dialog.FileName, Config.ConfigFile, true);
+                // File.Copy(dialog.FileName, Config.ConfigFile, true);
+                // 
+                using (var fs = File.Open(dialog.FileName, FileMode.Open, FileAccess.Read))
+                {
+                    StreamReader sr = new StreamReader(fs);
+                    var s = sr.ReadToEnd();
+                    File.WriteAllText(Config.ConfigFile, s);
+                }
                 Load();
                 AppData.MyEA.GetEvent<UpdateEvent>().Publish();
             }

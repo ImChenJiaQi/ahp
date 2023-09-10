@@ -49,6 +49,7 @@ namespace AHPTest.Commons
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
                 File.Delete(ConfigFile);
             }
         }
